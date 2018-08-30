@@ -1,6 +1,6 @@
 {
   "name": "optimize-image-webpack-loader",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Optimize image loader module for webpack",
   "keywords": [
     "sharp",
