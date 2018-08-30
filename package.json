@@ -1,5 +1,5 @@
 {
-  "name": "optimize-image-loader",
+  "name": "optimize-image-webpack-loader",
   "version": "0.1.0",
   "description": "Optimize image loader module for webpack",
   "keywords": [
@@ -9,12 +9,12 @@
     "webpack",
     "loader"
   ],
-  "homepage": "https://github.com/massada/optimize-image-loader",
-  "bugs": "https://github.com/massada/optimize-image-loader/issues",
+  "homepage": "https://github.com/massada/optimize-image-webpack-loader",
+  "bugs": "https://github.com/massada/optimize-image-webpack-loader/issues",
   "bin": "",
   "license": "MIT",
   "author": "José Massada <jose.massada@gmail.com>",
-  "repository": "massada/optimize-image-loader",
+  "repository": "massada/optimize-image-webpack-loader",
   "main": "dist/cjs.js",
   "scripts": {
     "build": "cross-env NODE_ENV=production babel src -d dist --copy-files",

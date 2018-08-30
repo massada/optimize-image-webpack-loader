@@ -1,4 +1,4 @@
-# optimize-image-loader
+# optimize-image-webpack-loader
 A image loader module for webpack.
 
 ## Requirements
@@ -9,12 +9,12 @@ This module requires a minimum of Node v6.9.0 and works with Webpack v3 and Webp
 
 ### npm
 ```console
-$ npm install optimize-image-loader
+$ npm install optimize-image-webpack-loader
 ```
 
 ### yarn
 ```console
-$ yarn add optimize-image-loader
+$ yarn add optimize-image-webpack-loader
 ```
 
 ## Options
@@ -51,7 +51,7 @@ const config = {
     rules: [
       {
         test: /\.(png|jpe?g|gif|tiff)$/,
-        loader: 'optimize-image-loader',
+        loader: 'optimize-image-webpack-loader',
         options: {
           name: 'images/[name].[hash:8].[ext]',
           sharp: {

@@ -1,5 +1,5 @@
 //
-// optimize-image-loader
+// optimize-image-webpack-loader
 //
 // Copyright (c) 2018 José Massada <jose.massada@gmail.com>
 //
@@ -108,7 +108,7 @@ async function optimize(ctx, image, options) {
 async function process(ctx, image, options) {
   const { name, width, emitFile, cache } = options;
 
-  const findCacheDirOptions = { name: 'optimize-image-loader' };
+  const findCacheDirOptions = { name: 'optimize-image-webpack-loader' };
   const cacheDir = cache !== false ? findCacheDir(findCacheDirOptions) : null;
 
   const metadata = await getMetadata(ctx, image, { cacheDir });
