@@ -31,6 +31,7 @@ import sharp from 'sharp';
 const defaultOptions = {
   name: '[name].[hash:8].[ext]',
   sharp: {},
+  lean: false,
 };
 
 function toArray(value) {
@@ -40,19 +41,20 @@ function toArray(value) {
   return Array.isArray(value) ? value : [value];
 }
 
-function serializeAsset(asset) {
-  return `{
-    url: __webpack_public_path__ + '${asset.url}',
-    width: ${asset.width},
-    toString() {
-      return this.url;
-    }
-  }`;
+function serializeAsset(asset, lean) {
+  const { url, width } = asset;
+  const data = `url: __webpack_public_path__ + '${url}', width: ${width}`;
+
+  if (!lean) {
+    return `{${data}, toString() { return this.url; }}`;
+  }
+
+  return `{${data}}`;
 }
 
-function serialize(assets) {
-  const data = assets.map(serializeAsset).join(',\n  ');
-  return `module.exports = ${assets.length > 1 ? `[\n  ${data}\n]` : data};`;
+function serialize(assets, lean) {
+  const data = assets.map((a) => serializeAsset(a, lean)).join(',\n  ');
+  return `module.exports = ${assets.length > 1 ? `[${data}]` : data};`;
 }
 
 async function getMetadata(ctx, image, options) {
@@ -106,7 +108,7 @@ async function optimize(ctx, image, options) {
 }
 
 async function process(ctx, image, options) {
-  const { name, width, emitFile, cache } = options;
+  const { name, width, emitFile, cache, lean } = options;
 
   const findCacheDirOptions = { name: 'optimize-image-webpack-loader' };
   const cacheDir = cache !== false ? findCacheDir(findCacheDirOptions) : null;
@@ -118,7 +120,7 @@ async function process(ctx, image, options) {
   );
 
   const assets = await Promise.all(promises);
-  return serialize(assets);
+  return serialize(assets, lean);
 }
 
 export default function loader(content) {
