@@ -32,6 +32,7 @@ const defaultOptions = {
   name: '[name].[hash:8].[ext]',
   sharp: {},
   lean: false,
+  formats: null,
 };
 
 function toArray(value) {
@@ -77,13 +78,29 @@ async function getMetadata(ctx, image, options) {
   return metadata;
 }
 
-async function optimize(ctx, image, options) {
-  const { name, width, emitFile, cacheDir } = options;
-  const key = `${ctx.resourcePath}+${width}`;
+function extension(format) {
+  if (format === 'jpeg') {
+    return '.jpg';
+  }
+  return `.${format}`;
+}
 
-  const url = loaderUtils.interpolateName(ctx, name, {
-    content: key,
-  });
+async function optimize(ctx, image, options) {
+  const { name, width, emitFile, cacheDir, format } = options;
+
+  const resourcePath = ctx.resourcePath.replace(/\.[^.]+$/, extension(format));
+  const key = `${resourcePath}+${width}`;
+
+  const url = loaderUtils.interpolateName(
+    {
+      resourcePath,
+      options: ctx.options,
+    },
+    name,
+    {
+      content: key,
+    }
+  );
 
   let data;
   if (cacheDir) {
@@ -93,7 +110,10 @@ async function optimize(ctx, image, options) {
   }
 
   if (!data) {
-    data = await image.resize(width).toBuffer();
+    data = await image
+      .resize(width)
+      .toFormat(format)
+      .toBuffer();
 
     if (cacheDir) {
       await cacache.put(cacheDir, key, data);
@@ -108,18 +128,29 @@ async function optimize(ctx, image, options) {
 }
 
 async function process(ctx, image, options) {
-  const { name, width, emitFile, cache, lean } = options;
+  const { name, width, emitFile, cache, lean, formats } = options;
 
   const findCacheDirOptions = { name: 'optimize-image-webpack-loader' };
   const cacheDir = cache !== false ? findCacheDir(findCacheDirOptions) : null;
 
   const metadata = await getMetadata(ctx, image, { cacheDir });
 
+  const outputFormats =
+    formats && typeof formats === 'function' ? formats(metadata) : formats;
+
   const promises = toArray(width || metadata.width).map((w) =>
-    optimize(ctx, image, { name, width: w, emitFile, cacheDir })
+    toArray(outputFormats || metadata.format).map((f) =>
+      optimize(ctx, image, {
+        name,
+        width: w,
+        emitFile,
+        cacheDir,
+        format: f,
+      })
+    )
   );
 
-  const assets = await Promise.all(promises);
+  const assets = await Promise.all([].concat(...promises));
   return serialize(assets, lean);
 }
 
