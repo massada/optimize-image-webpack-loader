@@ -98,7 +98,7 @@ async function optimize(ctx, image, options) {
     },
     name,
     {
-      content: key,
+      content: `${ctx.resourcePath}+${width}`,
     }
   );
 
