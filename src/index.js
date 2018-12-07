@@ -33,6 +33,7 @@ const defaultOptions = {
   sharp: {},
   lean: false,
   formats: null,
+  resolve: null,
 };
 
 function toArray(value) {
@@ -124,22 +125,28 @@ async function optimize(ctx, image, options) {
     ctx.emitFile(url, data);
   }
 
-  return { url, width };
+  return { url, width, format };
 }
 
 async function process(ctx, image, options) {
-  const { name, width, emitFile, cache, lean, formats } = options;
+  const { name, emitFile, cache, lean } = options;
+  let { widths, formats, resolve } = options;
 
   const findCacheDirOptions = { name: 'optimize-image-webpack-loader' };
   const cacheDir = cache !== false ? findCacheDir(findCacheDirOptions) : null;
 
   const metadata = await getMetadata(ctx, image, { cacheDir });
 
-  const outputFormats =
-    formats && typeof formats === 'function' ? formats(metadata) : formats;
+  widths = toArray(widths || metadata.width);
 
-  const promises = toArray(width || metadata.width).map((w) =>
-    toArray(outputFormats || metadata.format).map((f) =>
+  if (typeof formats === 'function') {
+    formats = formats(metadata);
+  }
+
+  formats = toArray(formats || metadata.format);
+
+  const promises = widths.map((w) =>
+    formats.map((f) =>
       optimize(ctx, image, {
         name,
         width: w,
@@ -151,7 +158,9 @@ async function process(ctx, image, options) {
   );
 
   const assets = await Promise.all([].concat(...promises));
-  return serialize(assets, lean);
+  resolve = toArray(resolve || formats);
+
+  return serialize(assets.filter((a) => resolve.includes(a.format)), lean);
 }
 
 export default function loader(content) {

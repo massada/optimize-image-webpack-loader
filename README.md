@@ -35,7 +35,7 @@ Overwrites sharp options.
 See (https://github.com/lovell/sharp/blob/master/lib/constructor.js) for
 defaults.
 
-### `width`
+### `widths`
 Type: `Number|Array`
 Default: `undefined`
 
@@ -59,7 +59,7 @@ const config = {
             jpegProgressive: true,
             jpegChromaSubsampling: '4:2:0'
           },
-          width: [2000, 1000],
+          widths: [2000, 1000],
         },
       },
     ],
@@ -70,7 +70,12 @@ const config = {
 
 ### Example 2
 ```js
-const url = require('./image.jpg?{width:[500,250]}');
+const url = require('./image.jpg?{widths:[500,250]}');
+```
+
+### Example 4
+```js
+const url = require('./image.jpg?{widths:125}');
 ```
 
 ## Changelog
