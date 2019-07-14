@@ -1,6 +1,6 @@
 {
   "name": "optimize-image-webpack-loader",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Optimize image loader module for webpack",
   "keywords": [
     "sharp",
@@ -21,8 +21,7 @@
     "clean": "del-cli dist",
     "lint": "eslint --cache src",
     "prebuild": "yarn run clean",
-    "prepublish": "yarn run build",
-    "security": "nsp check"
+    "prepublish": "yarn run build"
   },
   "engines": {
     "node": ">= 6.9.0 <7.0.0 || >= 8.9.0"
@@ -46,7 +45,6 @@
     "eslint-config-webpack": "^1.2.5",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "nsp": "^3.2.1",
     "prettier": "^1.14.2",
     "sharp": "^0.22.1"
   }
