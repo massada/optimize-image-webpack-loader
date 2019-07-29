@@ -1,6 +1,6 @@
 {
   "name": "optimize-image-webpack-loader",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Optimize image loader module for webpack",
   "keywords": [
     "sharp",
@@ -27,11 +27,11 @@
     "node": ">= 6.9.0 <7.0.0 || >= 8.9.0"
   },
   "peerDependencies": {
-    "sharp": "^0.22.1",
+    "sharp": "^0.23.0",
     "webpack": "^3.0.0 || ^4.0.0"
   },
   "dependencies": {
-    "cacache": "^11.2.0",
+    "cacache": "^12.0.2",
     "find-cache-dir": "^3.0.0",
     "loader-utils": "^1.1.0"
   },
@@ -46,6 +46,6 @@
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-prettier": "^3.0.0",
     "prettier": "^1.14.2",
-    "sharp": "^0.22.1"
+    "sharp": "^0.23.0"
   }
 }
